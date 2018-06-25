@@ -1,0 +1,195 @@
+//------------------------------------------------------------
+
+                            STEP 1
+
+
+START:
+        react-create-app react-course-app
+
+DELETE README
+
+
+Create Module CSS:
+
+        npm run eject
+
+    Plik CSS uzywany tylko w komponencie, w ktorym zostanie
+    zaimportowany
+
+    Bez tego plik CSS ma wplyw na cala apke
+
+    Folder config -> webpack.config.dev.js
+
+    module -> test CSS
+
+    Tak to powinno wygladac:
+
+      {
+            test: /\.css$/,
+            use: [
+              require.resolve('style-loader'),
+              {
+                loader: require.resolve('css-loader'),
+                options: {
+                  importLoaders: 1,
+                  modules: true,
+                  localIdentName: '[name]__[local]__[hash:base64:5]'
+                },
+              },
+
+
+    Potem przechodzimy do: webpack.config.prod.js
+
+    Szukamy module -> test CSS
+
+    i tak powinno to wygladac:
+
+     // in the main CSS file.
+          {
+            test: /\.css$/,
+            loader: ExtractTextPlugin.extract(
+              Object.assign(
+                {
+                  fallback: {
+                    loader: require.resolve('style-loader'),
+                    options: {
+                      hmr: false,
+                    },
+                  },
+                  use: [
+                    {
+                      loader: require.resolve('css-loader'),
+                      options: {
+                        importLoaders: 1,
+                        minimize: true,
+                        sourceMap: shouldUseSourceMap,
+                        modules: true,
+                        localIdentName: '[name]__[local]__[hash:base64:5]'
+                      },
+                    },
+                    {
+                      loader: require.resolve('postcss-loader'),
+                      options: {
+
+
+DELETE logo.svg
+
+
+DELETE import logo FROM App.js
+
+
+CLEAN UP INSIDE render() return
+
+
+DELETE import App.css FROM App.js
+
+
+DELETE className in div selector
+
+
+DELETE App.css FILE
+
+
+Google Fonts 
+
+
+
+
+//------------------------------------------------------------
+
+
+
+//------------------------------------------------------------
+
+                            STEP 2
+
+
+Sprawdzenie, czy apka dziala narazie:
+
+    npm start
+
+Utworzenie folderow:
+
+    components
+    containers
+
+Utworzenie components/Layout
+           components/Layout/Layout.js
+
+Utworzenie folderu assets (obrazki)
+
+
+Utworzenie folderu hoc
+                   hoc/Aux.js
+
+==========================================
+Utworzenie prostego pliku layout.js:
+==========================================
+import React from 'react';
+import Aux from '../../hoc/Aux';
+
+const layout = (props) => (
+    <Aux>
+    <div>
+        Toolbar, SideDrawer, Backdrop
+    </div>
+    <main>
+        { props.children }
+    </main>
+    </Aux>
+);
+
+export default layout;
+==========================================
+
+
+
+
+
+
+==========================================
+Utworzenie hoc Aux.js:
+==========================================
+const aux = ( props ) => props.children;
+
+export default aux;
+==========================================
+
+
+
+
+
+
+==========================================
+App.js
+==========================================
+import React, { Component } from 'react';
+import Layout from './components/Layout/Layout';
+
+class App extends Component {
+  render() {
+    return (
+      <div>
+        <Layout>
+          <p>Test</p>
+        </Layout>
+      </div>
+    );
+  }
+}
+
+export default App;
+==========================================
+
+
+
+
+Podstawowy widok, to co pomiedzy selektorami Layout
+wyswietlane w miejscu props.children w Layout.js
+
+
+//------------------------------------------------------------
+
+
+
+
