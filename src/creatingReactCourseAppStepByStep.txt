@@ -193,3 +193,58 @@ wyswietlane w miejscu props.children w Layout.js
 
 
 
+//------------------------------------------------------------
+
+                            STEP 3
+
+Utworzenie containers/BurgerBuilder
+           containers/BurgerBuilder/BurgerBuilder.js
+==========================================
+BurgerBuilder.js:
+==========================================
+import React, { Component } from 'react';
+import Aux from '../../hoc/Aux';
+
+class BurgerBuilder extends Component {
+    render () {
+        return (
+            <Aux>
+                <div>Burger</div>
+                <div>Build Controls</div>
+            </Aux>
+        );
+    }
+}
+
+export default BurgerBuilder;
+==========================================
+
+
+
+
+Umiejscowienie BurgerBuilder.js w App.js
+Miejsce gdzie bedzie wyswietlany aktualny burger z opcjami
+do zmian jego konfiguracji
+
+class App extends Component {
+  render() {
+    return (
+      <div>
+        <Layout>
+          <BurgerBuilder />
+        </Layout>
+      </div>
+    );
+  }
+}
+
+
+
+
+
+
+
+
+
+
+//------------------------------------------------------------
