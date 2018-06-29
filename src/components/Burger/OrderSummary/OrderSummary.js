@@ -1,9 +1,8 @@
-import React from 'react';
-import Aux from '../../../hoc/Aux';
+import React, { Component } from 'react';
+import Aux from '../../../hoc/AuxFolder/Aux';
 import Button from '../../UI/Button/Button';
 
 
-const orderSummary = (props) => {
     /*
         Lista zamowien,
         zawiera liste skladnikow
@@ -55,39 +54,61 @@ const orderSummary = (props) => {
         BurgerBuilder
 
     */
-    const ingredientSummary = Object.keys(props.ingredients)
+
+
+
+class OrderSummary extends Component {
+
+    // OrderSummary pomimo ze nie jest pokazane ciagle to sie
+    // renderuje jezeli dodamy jakikolwiek skladnik a to
+    // nie jest potrzebne
+    // Logika tego zostanie zalatwiona w Modal bo w to
+    // zamkniety jest ten komponent potem
+    // Modal - shouldComponentUpdate, czyli
+    // calosc zrenderuje sie tylko w tedy, gdy
+    // show = true, jak bedziemy chcieli wyswietlic te menu
+    // Klikniemy ORDER NOW i dopiero wtedy Modal i 
+    // OrderSummary zostana wyrenderowane
+    componentWillUpdate() {
+        console.log('[OrderSummary] componentWillUpdate()');
+    }
+
+    render() {
+
+    const ingredientSummary = Object.keys(this.props.ingredients)
     .map(igKey => {
         return  (<li key = { igKey } >
                     <span style = {{ textTransform: 'capitalize' }} >
                           {igKey}
-                    </span>: {props.ingredients[igKey]}
+                    </span>: {this.props.ingredients[igKey]}
                  </li>
                 );
     });
 
-    return (
-        <Aux>
-            <h3>Your Order</h3>
-            <p>A delicious burger with the following ingredients:</p>
-            <ul>
-                { ingredientSummary }
-            </ul>
-            <p>
-                <strong>
-                    Total Price: { props.price.toFixed(2) }
-                </strong>
-            </p>
-            <p>Continue to Checkout?</p>
-            <Button btnType="Danger"
-                    clicked = { props.purchaseCancelled } >
-                    CANCEL
-            </Button>
-            <Button btnType="Success"
-                    clicked = { props.purchaseContinued } >
-                    CONTINUE
-            </Button>
-        </Aux>
-    );
-};
+        return (
+            <Aux>
+                <h3>Your Order</h3>
+                <p>A delicious burger with the following ingredients:</p>
+                <ul>
+                    { ingredientSummary }
+                </ul>
+                <p>
+                    <strong>
+                        Total Price: { this.props.price.toFixed(2) }
+                    </strong>
+                </p>
+                <p>Continue to Checkout?</p>
+                <Button btnType="Danger"
+                        clicked = { this.props.purchaseCancelled } >
+                        CANCEL
+                </Button>
+                <Button btnType="Success"
+                        clicked = { this.props.purchaseContinued } >
+                        CONTINUE
+                </Button>
+            </Aux>            
+        );   
+    }
+}
 
-export default orderSummary;
+export default OrderSummary;
