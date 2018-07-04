@@ -37,6 +37,25 @@
     Nastepuje takze usuniecie bledu z lokalnego state
 */
 
+
+
+/*
+
+    componentWillUnmount() {
+        console.log('Will Unmount', this.reqInterceptor, this.resInterceptor);
+        axios.interceptors.request.eject(this.reqInterceptor);
+        axios.interceptors.response.eject(this.resInterceptor);
+    }
+
+    Potrzebne aby komponent nie wywolywal wszystkiego co posiada
+    non stop bo w ilu komponentach zostanie uzyty, tyle razy wszystko
+    sie wywola a takiego zbednego ,,ruchu" nie chcemy
+    Nie tworzymy ciagle kolejnych interceptorow
+
+*/
+
+
+
 import React, { Component } from 'react';
 import Modal from '../../components/UI/Modal/Modal';
 import Aux from '../AuxFolder/Aux';
@@ -47,15 +66,21 @@ const withErrorHandler = ( WrappedComponent, axios ) => {
             error: null
         }
 
-        componentDidMount () {
-            axios.interceptors.request.use(req => {
+        componentWillMount () {
+            this.reqInterceptor = axios.interceptors.request.use(req => {
                 this.setState({ error: null });
                 return req;
             });
 
-            axios.interceptors.response.use(res => res, error => {
+            this.resInterceptor = axios.interceptors.response.use(res => res, error => {
                 this.setState({ error: error });
             });
+        }
+
+
+        componentWillUnmount() {
+            axios.interceptors.request.eject(this.reqInterceptor);
+            axios.interceptors.response.eject(this.resInterceptor);
         }
 
     
