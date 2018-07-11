@@ -2,6 +2,17 @@ import React, { Component } from 'react';
 import Button from '../../../components/UI/Button/Button';
 import classes from './ContactData.css';
 import axios from '../../../axios-orders';
+import Spinner from '../../../components/UI/Spinner/Spinner';
+
+
+
+/*
+    Formularz kontaktowy podmieniony na Spinner, jezeli
+    jest oczekiwanie na serwer, po kliknieciu 
+    ORDER    
+    Nastepnie po otrzymaniu pozytywnej odpowiedzi od serwera,
+    nastepuje przekierowanie do innej strony
+*/
 
 class ContactData extends Component {
     state = {
@@ -36,6 +47,7 @@ class ContactData extends Component {
             .then(response => {
                     console.log(response);
                     this.setState({ loading: false });
+                    this.props.history.push('/');
             })
             .catch(error => {
                     console.log(error);
@@ -44,9 +56,7 @@ class ContactData extends Component {
     }
 
     render() {
-        return (
-            <div className = { classes.ContactData } >
-                <h4>Enter your Contact Data</h4>
+        let form = (
                 <form>
                     <input className = { classes.Input } 
                            type = "text" 
@@ -74,6 +84,14 @@ class ContactData extends Component {
                     </Button>
 
                 </form>
+        );
+        if (this.state.loading) {
+            form = <Spinner />;
+        }
+        return (
+            <div className = { classes.ContactData } >
+                <h4>Enter your Contact Data</h4>
+                { form }
             </div>
         );
     }

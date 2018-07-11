@@ -72,7 +72,6 @@ import ContactData from './ContactData/ContactData';
 // odczytywane z routingu i aktualizowany jest state aplikacji
 // Zebrane w ten sposob dane sa wysylane np. do formularza
 
-
 class Checkout extends Component {
     state = {
         ingredients: null,
@@ -108,7 +107,7 @@ class Checkout extends Component {
                                  checkoutCancelled = { this.checkoutCancelledHandler } 
                                  checkoutContinued = { this.checkoutContinuedHandler } />
                 <Route path = { this.props.match.path + '/contact-data' }
-                       render = {() => (<ContactData ingredients = { this.state.ingredients } price = { this.state.totalPrice } />)} />
+                       render = { (props) => (<ContactData ingredients = { this.state.ingredients } price = { this.state.totalPrice } { ...props } />)} />
             </div>
         );
     }
