@@ -56,8 +56,223 @@ import Input from '../../../components/UI/Input/Input';
 
 */
 
+/*
+        Dodanie dropdown menu:
+        W Input.js
+        korzysta z elementConfig.options
+        options musi zostac przemapowane i wtedy mozna
+        wyswietlic juz jako pojedynczy element dropdown menu
+        Wykorzystujemy do tego displayValue i value danej opcji
+        do wyboru
+*/
+
+/*
+        Przechwytywanie tego co uzytkownik wprowadza:
+        Kazdy element Input musi posiadac onChange event listener:
+        onChange = { props.changed }
+       
+       
+        Tutaj zostaje to odebrane:
+        changed = { this.inputChangedHandler }
+        Kazda zmiana w jakims polu powoduje przekazanie tutaj tej
+        informacji i dalej przekazanie do inputChangedHandler
+       
+       
+        Formularz musi reagowac takze na wprowadzane zmiany przez
+        uzytkownika i update'towac Inputy:
+        changed = {(event) => this.inputChangedHandler(event, formElement.id) }
+        formElement.id - id danego Input (name, street, itd.)
+        event - wartosc
+        Te dwie informacji wystarcza zeby z-update'towac poszczegolne
+        pole formularza
 
 
+        Id zostalo przypisane podczas tworzenia tablicy formElementsArray:
+        formElementsArray.push({
+            id: key,
+
+
+        
+*/
+
+/*
+            inputChangedHandler:
+    
+        Przy takiej konstrukcji obiektu orderForm musimy glebiej przekopiowac
+        poszczegolne obiekty w orderForm, aby miec dostep do kopii ich ,,wnetrza"
+        a nie do wskaznikow:
+
+        const updatedOrderForm = {
+            ...this.state.orderForm
+        };
+        const updatedFormElement = { 
+            ...updatedOrderForm[inputIdentifier]
+        };
+
+        1. kopia calosci orderForm
+        2. kopia poszczegolnych elementow (obiektow), np
+        name, street
+        Wykorzystanie id, jakie pole dokladnie
+
+        Dalej:
+        updatedFormElement.value = event.target.value;
+        updatedOrderForm[inputIdentifier] = updatedFormElement;  
+        
+        3. value w danym obiekcie (name, street) przyjmuje wartosc
+        wprowadzona przez uzytkownika
+        4. Glowna kopia calosci orderForm przyjmuje naniesione poprawki
+        z glebszej kopii poszczegolnych obiektow wewnatrz
+
+        Dalej:
+        this.setState({ orderForm: updatedOrderForm });
+
+        5. Update oryginalnego obiektu orderForm
+
+*/
+
+/*
+        Form Submission:
+
+            <form onSubmit = { this.orderHandler } >
+
+        const formData = {};
+        for (let formElementIdentifier in this.state.orderForm) {
+            formData[formElementIdentifier] = this.state.orderForm[formElementIdentifier].value;
+        }
+        const order = {
+            ingredients: this.props.ingredients,
+            price: this.props.price,
+            orderData: formData
+        }
+
+        orderData - wartosci poszczegolnych pol z formularza
+
+        obiekt pomocniczy formData
+        uzycie petli na obiekcie orderForm
+        Zczytanie poszczegolnych wartosci pol 
+        Przypisanie ich do formData
+*/
+
+/*
+        Validation Form:
+
+
+        1. Kazde pole musi miec zapis, np:
+                validation: {
+                    required: true,
+                    minLength: 5,
+                    maxLength: 5
+                },
+                valid: false
+
+        2. Stworzenie metody sprawdzajacej:
+            checkValidity(value, rules) {
+                let isValid = false;
+
+                if (rules.required) {
+                    isValid = value.trim() !== '';
+                }
+
+                return isValid;
+            }
+        jezeli zasady danego pola posiadaja required = true, to
+        sprawdzenie, czy pole posiada co kolwiek wpisanego
+
+        3. W metodzie nasluchujacej zmian w formularzu:
+        updatedFormElement.valid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
+        przekazanie do metody sprawdzajacej obecnej wartosci pola oraz jego
+        indywidualnych zasad
+
+        4. Metoda checkValidity zwraca ostatecznie true/false
+
+        5. Mozemy dalej dodawac jakies sprawdzanie np:
+        if (rules.minLength) {
+            isValid = value.length >= rules.minLength;
+        }
+
+        if (rules.maxLength) {
+            isValid = value.length <= rules.maxLength;
+        }
+*/
+
+/*
+        Metoda do sprawdzania poprawnosci pol formularza posiada
+        jedno sprawdzenie za drugim, wiec tylko ostatnie zwroci
+        ostateczna wartosc pomimo, ze np. wczesniejsze byly na false
+
+        W kazdym sprawdzeniu, sprawdzenie, czy juz wartosc isValid = true
+        && isValid
+*/
+
+/*
+        Dodanie komunikatu w Input.js, jezeli dane pole nie jest
+        poprawnie uzupelnione
+
+        Stworzenie dynamicznego tworzenia sie klasy CSS:
+        className = { inputClasses.join(' ') }
+        Do kazdego typu pola
+
+
+        Stworzenie tablicy:
+        const inputClasses = [ classes.InputElement ];
+
+        Jezeli pole nie jest poprawne, to na samym poczatku sprawdzenie:
+        if (props.invalid && props.shouldValidate) {
+            inputClasses.push(classes.Invalid);
+        }
+        Dopisanie klasy CSS
+
+
+        Niektore typy pol, takie jak np. dropdown menu, nie powinny
+        byc sprawdzane, przeciez zawsze jest wybrana jakas wartosc, wiec
+        if statement posiada dopisek && props.shouldValidate
+
+        shouldValidate przekazuje true, jezeli dane pole (obiekt)
+        posiada validation
+*/
+
+/*
+        Sprawdzenie danego pola, tylko, gdy uzytkownik klikna/zacza pisac
+        Dodanie do obiektow pol:
+        touched: false
+
+        Nastepnie w metodzie przechwytujacej kazde wpisanie czegos:
+        updatedFormElement.touched = true;
+        Uzytkownik zacza cos pisac wiec = true teraz
+
+        Przekazanie tej informacji do Input component:
+        touched = { formElement.config.touched } 
+
+        W Input.js IF STATEMENT dopisanie:
+         && props.touched
+*/
+
+
+/*
+        Button ORDER musi dzialac tylko wtedy, gdy
+        caly formularz jest poprawny:
+
+        1. Dopisanie poza calym obiektem orderForm:
+                formIsValid: false,
+        
+        2. W metodzie, ktora reaguje na kazde wpisanie czegos:
+        sprawdzenie, czy wszystkie obiekty (name, street, itd) posiadaja
+        valid = true, dlatego wybranie glownej kopii calego obiektu
+        orderForm i sprawdzenie kazdego obiektu:
+
+        let formIsValid = true;
+        for (let inputIdentifier in updatedOrderForm) {
+            formIsValid = updatedOrderForm[inputIdentifier].valid && formIsValid;
+        }
+
+        3. Aktualizacja glownego state aplikacji:
+        formIsValid: formIsValid 
+        
+        4. Dostosowanie Buttona:
+        disabled = { !this.state.formIsValid } 
+
+        5. Button to nasz komponent, wiec disabled trzeba tam dodac
+*/
 class ContactData extends Component {
     state = {
         orderForm: {
@@ -67,7 +282,12 @@ class ContactData extends Component {
                     type: 'text',
                     placeholder: 'Your Name'
                 },
-                value: ''
+                value: '',
+                validation: {
+                    required: true
+                },
+                valid: false,
+                touched: false
             },
             street: {
                 elementType: 'input',
@@ -75,7 +295,12 @@ class ContactData extends Component {
                     type: 'text',
                     placeholder: 'Street'
                 },
-                value: ''
+                value: '',
+                validation: {
+                    required: true
+                },
+                valid: false,
+                touched: false
             },
             zipCode: {
                 elementType: 'input',
@@ -83,7 +308,14 @@ class ContactData extends Component {
                     type: 'text',
                     placeholder: 'ZIP Code'
                 },
-                value: ''
+                value: '',
+                validation: {
+                    required: true,
+                    minLength: 5,
+                    maxLength: 5
+                },
+                valid: false,
+                touched: false
             },
             country: {
                 elementType: 'input',
@@ -91,7 +323,12 @@ class ContactData extends Component {
                     type: 'text',
                     placeholder: 'Country'
                 },
-                value: ''
+                value: '',
+                validation: {
+                    required: true
+                },
+                valid: false,
+                touched: false
             },
             email: {
                 elementType: 'input',
@@ -99,7 +336,12 @@ class ContactData extends Component {
                     type: 'email',
                     placeholder: 'Your E-Mail'
                 },
-                value: ''
+                value: '',
+                validation: {
+                    required: true
+                },
+                valid: false,
+                touched: false
             },
             deliveryMethod: {
                 elementType: 'select',
@@ -109,9 +351,12 @@ class ContactData extends Component {
                         { value: 'cheapest', displayValue: 'Cheapest' }
                     ]
                 },
-                value: ''
-            },
+                value: '',
+                validation: {},
+                valid: true
+            }
         },
+        formIsValid: false,
         loading: false
     }
 
@@ -119,9 +364,14 @@ class ContactData extends Component {
         console.log(this.props.ingredients);
         event.preventDefault();
         this.setState({ loading: true });
+        const formData = {};
+        for (let formElementIdentifier in this.state.orderForm) {
+            formData[formElementIdentifier] = this.state.orderForm[formElementIdentifier].value;
+        }
         const order = {
             ingredients: this.props.ingredients,
-            price: this.props.price
+            price: this.props.price,
+            orderData: formData
         }    
         axios.post('/orders.json', order)
             .then(response => {
@@ -135,6 +385,45 @@ class ContactData extends Component {
             });   
     }
 
+    checkValidity(value, rules) {
+        let isValid = true;
+
+        if (rules.required) {
+            isValid = value.trim() !== '' && isValid;
+        }
+
+        if (rules.minLength) {
+            isValid = value.length >= rules.minLength && isValid;
+        }
+
+        if (rules.maxLength) {
+            isValid = value.length <= rules.maxLength && isValid;
+        }
+
+        return isValid;
+    }
+
+    inputChangedHandler = (event, inputIdentifier) => {
+        const updatedOrderForm = {
+            ...this.state.orderForm
+        };
+        const updatedFormElement = { 
+            ...updatedOrderForm[inputIdentifier]
+        };
+        updatedFormElement.value = event.target.value;
+        updatedFormElement.valid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
+        updatedFormElement.touched = true;
+        updatedOrderForm[inputIdentifier] = updatedFormElement;
+        
+
+        let formIsValid = true;
+        for (let inputIdentifier in updatedOrderForm) {
+            formIsValid = updatedOrderForm[inputIdentifier].valid && formIsValid;
+        }
+
+        this.setState({ orderForm: updatedOrderForm, formIsValid: formIsValid });
+    }
+
     render() {
     const formElementsArray = [];
     for (let key in this.state.orderForm) {
@@ -145,17 +434,21 @@ class ContactData extends Component {
     }
 
         let form = (
-                <form>
+                <form onSubmit = { this.orderHandler } >
                     { 
                     formElementsArray.map(formElement => (
                         <Input elementType = { formElement.config.elementType } 
                                elementConfig = { formElement.config.elementConfig } 
                                value = { formElement.config.value } 
-                               key = { formElement.id } />
+                               key = { formElement.id } 
+                               changed = {(event) => this.inputChangedHandler(event, formElement.id) } 
+                               invalid = { !formElement.config.valid } 
+                               shouldValidate = { formElement.config.validation } 
+                               touched = { formElement.config.touched } />
                     ))
                     }
-                    <Button btnType = "Success" 
-                            clicked = { this.orderHandler } >
+                    <Button btnType = "Success"
+                            disabled = { !this.state.formIsValid } > 
                             ORDER
                     </Button>
 
