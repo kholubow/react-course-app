@@ -8,24 +8,16 @@ import axios from '../../axios-orders';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 
-const INGREDIENT_PRICES = {
-    salad: 0.5,
-    cheese: 0.4,
-    meat: 1.3,
-    bacon: 0.7
-};
-
+import { connect } from 'react-redux';
+import * as actionTypes from '../../store/actions';
 
 class BurgerBuilder extends Component {
     state = {
-        ingredients: null,
-        totalPrice: 4,
         purchasable: false,
         purchasing: false,
         loading: false,
         error: false
     }
-
 
 /*
     W ramach cwiczenia pobierania danych z backendu, skladniki
@@ -55,12 +47,12 @@ class BurgerBuilder extends Component {
 
 
 componentDidMount() {
-    axios.get('https://react-my-burger-6e0f8.firebaseio.com/ingredients.json')
-         .then(response => {
-                this.setState({ ingredients: response.data })})
-         .catch(error => {
-                this.setState({ error: true })
-         });
+//    axios.get('https://react-my-burger-6e0f8.firebaseio.com/ingredients.json')
+//         .then(response => {
+//                this.setState({ ingredients: response.data })})
+//         .catch(error => {
+//                this.setState({ error: true })
+//         });
 }
 
     
@@ -88,72 +80,6 @@ updatePurchaseState(ingredients) {
     // W addIngredient i removeIngredient
     // Metoda ta przyjmuje dane (tablice ingredients) aby
     // posiadac ich najbardziej aktualna wersje
-}
-
-
-addIngredientHandler = (type) => {
-    // 1. Po type (nazwa skladnika z BuildControls) pobranie z tablicy
-    // obecnego stanu
-    const oldCount = this.state.ingredients[type];
-    // 2. Zwiekszenie o 1 (po kliknieciu MORE)
-    const updatedCount = oldCount + 1;
-    // 3. Pobranie calej oryginalnej tablicy
-    const updatedIngredients = {
-        ...this.state.ingredients
-    };
-    // 4. Po type dokonanie aktualizacji zwiekszonej ilosci o 1
-    updatedIngredients[type] = updatedCount;
-    // 5. Z nowej tablicy wyszukanie ceny skladnika jaki tutaj dotarl
-    // po kliknieciu z BuildControls (type)
-    const priceAddition = INGREDIENT_PRICES[type];
-    // 6. Pobranie z tablicy aktualnej kwoty do zaplaty
-    const oldPrice = this.state.totalPrice;
-    // 7. Do juz istniejacej kwoty do zaplaty dodanie wartosci
-    // wybranego skladnika
-    const newPrice = oldPrice + priceAddition;
-    // 8. Finalne zaktualizowanie calego state
-    this.setState({
-        totalPrice: newPrice,
-        ingredients: updatedIngredients
-    });
-    // Ogolny przebieg addIngredient:
-    /*
-        1. BuildControls na podstawie tablicy generuje poszczegolne
-           przyciski (control) i kazdy z takowych w przycisku MORE posiada
-           click listener ktory wywoluje props.added
-        2. Jest to wywolanie added w BuildControls, czyli dalej,
-           wywolanie props.ingredientAdded wraz z przekazaniem aktualnie 
-           wybranego type (nazwy skladnika)
-        3. Do BurgerBuilder trafia wywolanie ostateczne metody addIngredientHandler
-           ktora otrzymuje type
-    */
-    this.updatePurchaseState(updatedIngredients);
-}
-
-
-removeIngredientHandler = (type) => {
-
-    const oldCount = this.state.ingredients[type];
-    if (oldCount <= 0) {
-        return;
-    }
-    const updatedCount = oldCount - 1;
-    const updatedIngredients = {
-        ...this.state.ingredients
-    };
-    updatedIngredients[type] = updatedCount;
-    const priceDeduction = INGREDIENT_PRICES[type];
-    const oldPrice = this.state.totalPrice;
-    const newPrice = oldPrice - priceDeduction;
-    this.setState({
-        totalPrice: newPrice,
-        ingredients: updatedIngredients
-    });
-    // Ogolny przebieg removeIngredient:
-    /*
-        Analogicznie jak przy addIngredient
-    */
-    this.updatePurchaseState(updatedIngredients);
 }
 
 purchaseHandler = () => {
@@ -196,7 +122,7 @@ purchaseContinueHandler = () => {
             uzyskac w ten sposob info o konkretnym skladniku
         */
         const disabledInfo = {
-            ...this.state.ingredients
+            ...this.props.ings
         };
         for (let key in disabledInfo) {
             disabledInfo[key] = disabledInfo[key] <= 0
@@ -204,22 +130,22 @@ purchaseContinueHandler = () => {
         //-----------------------------------------------
         let orderSummary = null;  
         let burger = this.state.error ? <p>Ingredients cant be loaded</p> : <Spinner />;
-        if (this.state.ingredients) {
+        if (this.props.ings) {
             burger = (
                 <Aux>
-                    <Burger ingredients = { this.state.ingredients } />
-                    <BuildControls ingredientAdded = { this.addIngredientHandler } 
-                                   ingredientRemoved = { this.removeIngredientHandler } 
+                    <Burger ingredients = { this.props.ings } />
+                    <BuildControls ingredientAdded = { this.props.onIngredientAdded } 
+                                   ingredientRemoved = { this.props.onIngredientRemoved } 
                                    disabled = { disabledInfo }
                                    purchasable = { this.state.purchasable } 
-                                   price = { this.state.totalPrice } 
+                                   price = { this.props.price } 
                                    ordered = { this.purchaseHandler } />
                 </Aux>
             );     
-            orderSummary = <OrderSummary ingredients = { this.state.ingredients } 
+            orderSummary = <OrderSummary ingredients = { this.props.ings } 
                                          purchaseCancelled = { this.purchaseCancelHandler } 
                                          purchaseContinued = { this.purchaseContinueHandler } 
-                                         price = { this.state.totalPrice } />;       
+                                         price = { this.props.price } />;       
         }
         if (this.state.loading) {
             orderSummary = <Spinner />;
@@ -236,4 +162,18 @@ purchaseContinueHandler = () => {
     }
 }
 
-export default withErrorHandler(BurgerBuilder, axios);
+const mapStateToProps = state => {
+    return {
+        ings: state.ingredients,
+        price: state.totalPrice
+    };
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        onIngredientAdded: (ingName) => dispatch({type: actionTypes.ADD_INGREDIENT, ingredientName: ingName}),
+        onIngredientRemoved: (ingName) => dispatch({type: actionTypes.REMOVE_INGREDIENT, ingredientName: ingName})
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(BurgerBuilder, axios));

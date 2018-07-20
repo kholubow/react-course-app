@@ -1,0 +1,221 @@
+1. npm install --save redux react-redux
+=============================================================
+2. scr/store utworzenie
+=============================================================
+3. Dodanie tam nowego pliku: reducer.js
+=============================================================
+4. Dodanie tam nowego pliku: actions.js
+=============================================================
+5. Utworzenie podstawowego actions:
+
+export const ADD_INGREDIENT = 'ADD_INGREDIENT';
+export const REMOVE_INGREDIENT = 'REMOVE_INGREDIENT';
+=============================================================
+6. Start implementing reducer, globalny redux'owy stan apki:
+
+import * as actionTypes from './actions';
+
+const initialState = {
+    ingredients: null,
+    totalPrice: 4
+};
+
+const reducer = (state = initialState, action) => {
+    
+};
+
+export default reducer;
+=============================================================
+7. Konfiguracja Redux w Index.js (connect redux store to the
+application):
+
+Provider komponent powinien zamykac wszystko co mamy, wlacznie z
+routingiem
+
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
+import reducer from './store/reducer';
+
+const store = createStore(reducer);
+
+const app = (
+    <Provider store = { store } >
+        <BrowserRouter>
+            <App />
+        </BrowserRouter>
+    </Provider>
+);
+
+ReactDOM.render(app, document.getElementById('root'));
+registerServiceWorker();
+=============================================================
+8. reducer:
+
+Dodawanie skladnika:
+...state - kopia calego state, potem zmiana tylko jednej rzeczy,
+bez naruszania reszty
+
+Trzeba nastepnie kopiowac "glebiej", poniewaz pojedyncza kopia
+nie stworzy kopii poszczegolnych elementow obiektu
+ingredients
+
+Potem wczytanie jaki skladnik: ilosc
+
+Usuwanie skladnika:
+To samo, kopia, nastepnie glebsza kopia, zeby skopiowac 
+poszczegolne elementy obiektu ingredients i nastepnie usuniecie
+wybranego skladnika
+
+Ogolem:
+
+[action.ingredientName]: Wybranie danego skladnika po przekazanych
+danych (nazwa skladnika),
+
+state.ingredients[action.ingredientName] Wczytanie ilosci danego
+skladnika
+
++ 1 / - 1 = dodanie skladnika / usuniecie
+
+import * as actionTypes from './actions';
+
+const initialState = {
+    ingredients: {
+        salad: 0,
+        bacon: 0,
+        cheese: 0,
+        meat: 0   
+    },
+    totalPrice: 4
+};
+
+const reducer = (state = initialState, action) => {
+    switch (action.type) {
+        case actionTypes.ADD_INGREDIENT:
+            return {
+                ...state,
+                ingredients: {
+                    ...state.ingredients,
+                    [action.ingredientName]: state.ingredients[action.ingredientName] + 1
+                }
+            };
+        case actionTypes.REMOVE_INGREDIENT:
+            return {
+                ...state,
+                ingredients: {
+                    ...state.ingredients,
+                    [action.ingredientName]: state.ingredients[action.ingredientName] - 1
+                }                
+            };
+        default:
+            return state;
+    }
+};
+
+export default reducer;
+
+=============================================================
+
+9. Connect reducer to the container:
+
+mapStateToProps - uzyskanie dostepu do danej czesci redux'owego
+state aplikacji
+
+mapDispatchToProps - kiedy i jaka funkcjonalnosc modyfikacji
+globalnego redux'owego state aplikacji ma zostac wywolana
+w reducer.js
+Przekazanie do reducer.js nazwy skladnika, wzgledem ktorego
+nastapi dana modyfikacja state
+
+import { connect } from 'react-redux';
+import * as actionTypes from '../../store/actions';
+
+
+
+
+
+
+const mapStateToProps = state => {
+    return {
+        ings: state.ingredients
+    };
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        onIngredientAdded: (ingName) => dispatch({type: actionTypes.ADD_INGREDIENT, ingredientName: ingName}),
+        onIngredientRemoved: (ingName) => dispatch({type: actionTypes.REMOVE_INGREDIENT, ingredientName: ingName})
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(BurgerBuilder, axios));
+
+Teraz wszedzie gdzie uzywalismy lokalnego ingredients trzeba
+zamienic na uzywanie ings
+
+Wykorzystanie w kontenerze metod z mapDispatchToProps
+wraz z przekazaniem nazwy skladnika do nich
+Tutaj, nie musimy tego ustalac, jest to przekazywane z
+BuildControls
+
+
+
+=============================================================
+10. Adjust Total Price Calculation
+
+Przeliczanie ceny calego burgera juz w reducer.js
+
+Ustalone ceny poszczegolnych skladnikow (skopiowane z kontenera)
+
+
+const INGREDIENT_PRICES = {
+    salad: 0.5,
+    cheese: 0.4,
+    meat: 1.3,
+    bacon: 0.7
+};
+
+Nastepnie dostosowanie reducera:
+
+Obliczanie ceny burgera podczas dodawania skladnikow:
+nowe totalPrice jest to aktualne state.totalPrice zapisane
+w state aplikacji + cena danego skladnika (action.ingredientName
+ - z zewnatrz)
+
+totalPrice: state.totalPrice + INGREDIENT_PRICES[action.ingredientName]
+
+
+Podczas usuwania skladnikow analogicznie:
+
+totalPrice: state.totalPrice - INGREDIENT_PRICES[action.ingredientName]
+
+Teraz w kontenerze BurgerBuilder trzeba "siegnac" po ta czesc
+redux'owego stanu apki:
+
+const mapStateToProps = state => {
+    return {
+        ings: state.ingredients,
+        price: state.totalPrice
+    };
+}
+
+Wszedzie trzeba zamienic totalPrice na price, np:
+
+render () {                              
+        <BuildControls ingredientAdded = { this.props.onIngredientAdded } 
+                       ingredientRemoved = { this.props.onIngredientRemoved } 
+                       disabled = { disabledInfo }
+                       purchasable = { this.state.purchasable } 
+                       price = { this.props.price } 
+                       ordered = { this.purchaseHandler } />
+
+        orderSummary = <OrderSummary ingredients = { this.props.ings } 
+                                     purchaseCancelled = { this.purchaseCancelHandler } 
+                                     purchaseContinued = { this.purchaseContinueHandler } 
+                                     price = { this.props.price } />;
+}
+
+
+=============================================================
+11. Redux & UI State - naprawa ORDER NOW button
+
+
