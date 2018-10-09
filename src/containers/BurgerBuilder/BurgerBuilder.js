@@ -13,7 +13,6 @@ import * as actionTypes from '../../store/actions';
 
 class BurgerBuilder extends Component {
     state = {
-        purchasable: false,
         purchasing: false,
         loading: false,
         error: false
@@ -72,7 +71,7 @@ updatePurchaseState(ingredients) {
     // 3. Zaktualizowanie oryginalnego state aplikacji
     // na sam koniec
     // purchasable: true, jezeli sum > 0
-    this.setState({purchasable: sum > 0});
+    return sum > 0;
     // Info idzie do BuildControls
     // Button bedzie dostepny, jezeli bedzie wartosc true 
     // przekazana
@@ -91,18 +90,7 @@ purchaseCancelHandler = () => {
 }
 
 purchaseContinueHandler = () => {
-    // alert('You continue');
-        const queryParams = [];
-
-         for (let i in this.state.ingredients) {
-             queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i]));
-         }
-        queryParams.push( 'price=' + this.state.totalPrice );
-        const queryString = queryParams.join('&');
-         this.props.history.push({
-             pathname: '/checkout',
-             search: '?' + queryString
-         });
+    this.props.history.push('/checkout');
 }
 
 
@@ -137,7 +125,7 @@ purchaseContinueHandler = () => {
                     <BuildControls ingredientAdded = { this.props.onIngredientAdded } 
                                    ingredientRemoved = { this.props.onIngredientRemoved } 
                                    disabled = { disabledInfo }
-                                   purchasable = { this.state.purchasable } 
+                                   purchasable = { this.updatePurchaseState(this.props.ings) } 
                                    price = { this.props.price } 
                                    ordered = { this.purchaseHandler } />
                 </Aux>

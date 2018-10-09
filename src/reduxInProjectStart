@@ -219,3 +219,101 @@ render () {
 11. Redux & UI State - naprawa ORDER NOW button
 
 
+W tym momencie przycisk ORDER NOW jest nieaktywny, 
+zmienna purchasable nie zmienia się.
+
+
+Zrezygnowanie ze zmiennej purchasable,
+update metody, ktora wplywa na decyzje, kiedy przycisk
+bedzie aktywny
+
+updatePurchaseState() metoda
+
+Teraz po wyborze skladnika, metoda nie aktualizuje 
+globalnego state aplikacji, a po prostu zwraca wartosc
+ilosci wprowadzonych skladnikow do konstrukcji burgera.
+
+Mozna zamowic Burgera, jezeli pojawil sie choc jeden skladnik.
+
+
+Metoda ta jest wywolywana w dwoch innych odpowiedzialnych wlasnie
+za dodawanie / usuwanie skladnikow Burgera:
+
+purchasable = { this.updatePurchaseState(this.props.ings) }
+
+Przycisk bedzie aktywny, dzieki zmianie purchasable @up
+
+Wszystkie zmiany w BurgerBuilder.js
+
+metoda zwroci wartosc true i skladniki
+
+Przekazane dalej do BuildControls.js
+
+dodawanie / usuwanie skladnikow w reducer.js poprzez actions,
+Oczywiscie przed dodaniem/usunieciem praca na kopii glownego
+state aplikacji.
+Poniewaz pracujemy przeciez na redux'owym state aplikacji,
+dlatego reducer.js potrzebny
+
+--------------------------
+
+Mozna to tez zrobic ( purchasable ) w reducer.js:
+dopisac do initialState, purchasable i dalej,
+ale zostac lepiej przy pierwszym rozwiazaniu
+
+
+=============================================================
+11. Adjusting Checkout and Contact Data
+
+Etap zamawiania,
+metoda purchaseContinueHandler()
+update
+Teraz bedzie to zrobione przy pomocy Redux'a
+BurgerBuilder.js
+
+
+Checkout.js 
+update
+Korzystanie z redux'a
+
+
+mapStateToProps aby mozna bylo korzystac z redux'owego 
+state aplikacji
+Korzystamy tutaj z rzeczy z pliku reducer.js
+Nazwy z initialState
+
+
+Polaczenie kontenera z redux'owym state aplikacji:
+connect(mapStateToProps)(Checkout);
+
+
+
+Formularz podsumowania teraz korzysta z redux'owego state 
+aplikacji, wczyta burgera jeszcze raz i potem przekaze skladniki
+do formularza kontaktowego.
+
+Wykorzystanie routingu w Checkout.js:
+                <Route path = { this.props.match.path + '/contact-data' }
+                       component = { ContactData } />
+Wczytanie adresu i komponentu kontaktowego
+
+
+
+Formularz kontaktowy otrzyma skladniki i cene,
+trzeba go tylko podlaczyc do redux'owego state aplikacji
+ContactData.js
+export default connect(mapStateToProps)(ContactData);
+
+state formularza: cala konstrukcja formularza kontaktowego
+wraz z jego valid state.
+
+
+Po zlozeniu zamowienia - spinner podczas wysylania danych
+do serwera i powrot na strone glowna.
+
+
+Formularz kontaktowy ContactData.js zawiera state z konstrukcja
+formularza, ale mozna to tez zrobic w redux'ie, teraz konstrukcja
+jest dostepna tylko dla tego jednego komponentu glownie, uzycie 
+redux bardzo ulatwia kontrolowanie obecnego state aplikacji z kazdego
+miejsca w projekcie.
