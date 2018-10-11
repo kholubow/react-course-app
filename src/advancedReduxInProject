@@ -1,0 +1,7 @@
+1. Installing the Redux Devtools:
+
+    Polaczenie rozszerzenia Chrome do sledzenia state
+    aplikacji z naszym web api:
+
+    index.js
+        const store = createStore(reducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
