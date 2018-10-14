@@ -5,3 +5,55 @@
 
     index.js
         const store = createStore(reducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+
+2. Preparing the Folder Structure:
+
+    Podzielenie glownego pliku store ( redux ) na podfoldery:
+    - actions
+    - reducers
+
+    actionTypes - przerobienie actions na funkcje
+
+    dodanie kolejnych plikow w actions, w ktorych poszczegolne
+    akcje beda realizowane jako funkcje.
+
+    Podzial reduxowego store na pliki, ktore beda zwiazane tylko z
+    okreslonymi zadaniami w api, np. zamowienia.
+
+3. Creating Action Creators:
+
+    Dwa oddzielne pliki zwiazane ze zmianami state apki 
+    w okreslonym obszarze, korzystaja z jednego 
+    actionTypes, sa w formie funkcji.
+    1. Plik actions wywola jakas akcje
+    2. Zmiana state api przez reducera
+
+
+    Aktualizacja index.js aby uzyc danego reducera
+    Uzycie wszystkich na raz pozniej.
+
+    Zebranie wszystkich akcji w actions/index.js
+    Z tego pliku beda brane akcje w innych miejscach w api.
+    
+4. Async Code:
+
+    Instalacja redux-thunk
+    Uzycie redux-thunk, middleware, compose w glownym pliku
+    index.js
+
+5. Using Async Code:
+
+    Kod asynchroniczny na zaladowanie skladnikow w apce z
+    serwera.
+    1. actionTypes - SET_INGREDIENTS
+    2. actions -> :
+        jedna funkcja czeka na dane z serwera po czym wywoluje
+        inna, druga, aby otrzymane dane zostaly przekazane dalej
+        do reducera, ktory umiesci je w globalnym redux'owym
+        state aplikacji.
+        Logika:
+            Otrzymane dane - wywolanie funkcji do przekazania danych
+            do reducera
+            Blad - wywolanie funkcji do obslugi bledu
+
+6. Using data after fetch from server:
