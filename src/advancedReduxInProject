@@ -57,3 +57,23 @@
             Blad - wywolanie funkcji do obslugi bledu
 
 6. Using data after fetch from server:
+
+    1. napisanie SET_INGREDIENTS w reducer.
+    2. napisanie FETCH_INGREDIENTS_FAILED w reducer.
+
+    Standardowo, kopia state, potem jego modyfikacja.
+
+    Po dodaniu w reducer, trzeba polaczyc to z kontenerem.
+    Odwolanie sie do actions aby pobrac poczatkowe dane o
+    skladnikach z serwera w kontenerze.
+    Dane zostana pobrane przy starcie pracy kontenera.
+
+7. Order by actions:
+
+    Tak samo, metoda ktora wywola inna metode jezeli uda sie
+    zamowic Burgera, przekaze dane zamowienia dalej do innej
+    metody, ktora wysle to do reducera a on do state apki.
+    Jezeli nie uda zlozyc sie zamowienia, wtedy wywolanie 
+    metody z bledem.
+
+8. Polaczenie order actions z kontenerem.
