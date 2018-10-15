@@ -76,4 +76,31 @@
     Jezeli nie uda zlozyc sie zamowienia, wtedy wywolanie 
     metody z bledem.
 
-8. Polaczenie order actions z kontenerem.
+8. Polaczenie order actions z kontenerem:
+
+    Polaczenie z funkcja purchaseBurgerStart, ktora wywola
+    odpowiednia funkcje w zaleznosci od sukcesu operacji.
+
+9. Order Reducer:
+
+    Reducer - wykonanie odpowiedniej operacji na redux'owym
+    state aplikacji w zaleznosci od wczesniej wybranej akcji i
+    przekazanych danych.
+
+10. Order Actions.
+11. Improve UX:
+
+    Zanim jeszcze skladniki sie pobiora, sa jako null i 
+    wystapi blad.
+    Uzycie Redirect komponent
+    Jezeli skladniki juz dotarly, to wczytaj komponent, jezeli
+    nie, to przekierowanie na strone glowna.
+    Checkout.js
+
+12. Combining Reducers:
+
+    W tej apce sa dwa: burgerBuilder i order.
+    Glowny plik index.js
+    combineReducers
+    Utworzenie rootReducer - stala, ktora bedzie zawierala
+    oba reducery.
