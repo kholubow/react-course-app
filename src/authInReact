@@ -1,0 +1,40 @@
+1. Auth Form - Auth Folder
+2. Auth Form - Local State a nie redux State
+    Local State - konfiguracja formularza.
+    Dodanie wlasnych validatorow do formularza.
+    Pole hasla - minimalna ilosc znakow - wlasny validator
+    Dynamicznie generowane inputy
+3. Dodanie formularza do routingu:
+    Jedyne miejsce z routingiem - App.js
+4. Otworzenie formularza:
+    Navigation
+    NavigationItems.js
+    Tutaj linki
+    Nowy z formularzem
+5. Auth.css
+    Import Auth.css in Auth.js
+6. checkValidity - wlasne validatory.
+7. Update inputow - kopia calego state, zmiana jednego inputu.
+    Sprawdzanie poprawnosci na bierzaco:
+        Przekazanie do metody checkValidity aktualnej wartosci
+        pola oraz zasad z Local State, wedlug ktorych dane pole ma
+        byc sprawdzane.
+    touched: true - przy jakiejkolwiek zmianie, pole oznaczone
+    jako naruszone / zmienione.
+    this.setState - zapisanie zmian w Local State.
+8. SUBMIT form:
+    Nowe akcje - actions/auth.js
+        Wybor akcji = operacja na redux global state
+
+    Nowe akcje - actionTypes.js
+    Wyeksportowanie akcji na zewnatrz - actions/index.js
+    Zaimportowanie actions/index.js w Auth.js
+    Przekazanie do actions wartosci pola email oraz wartosci
+    pola password.
+9. Token z backendu:
+    actions/auth.js
+    Wykonanie zapytania POST przy pomocy AXIOS do backendu,
+    wywolanie kolejnej akcji na podstawie zwroconych danych.
+    W ciele zapytania obiekt zawierajacy dane rejestracyjne.
+10. Logowanie:
+    
