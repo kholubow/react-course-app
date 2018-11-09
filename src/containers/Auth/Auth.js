@@ -4,6 +4,7 @@ import Input from '../../components/UI/Input/Input';
 import Button from '../../components/UI/Button/Button';
 import classes from './Auth.css';
 import * as actions from '../../store/actions/index';
+import Spinner from '../../components/UI/Spinner/Spinner';
 
 class Auth extends Component {
     state = {
@@ -87,7 +88,7 @@ class Auth extends Component {
 
     submitHandler = (event) => {
         event.preventDefault();
-        this.props.onAuth(this.state.controls.email.value, this.state.controls.password.value);
+        this.props.onAuth(this.state.controls.email.value, this.state.controls.password.value, this.state.isSignup);
     }
 
     switchAuthModeHandler = () => {
@@ -107,7 +108,7 @@ class Auth extends Component {
             });
         }
 
-        const form = formElementsArray.map(formElement => (
+        let form = formElementsArray.map(formElement => (
             <Input 
                    elementType = { formElement.config.elementType } 
                    elementConfig = { formElement.config.elementConfig } 
@@ -119,15 +120,30 @@ class Auth extends Component {
                    touched = { formElement.config.touched } />
         ));
 
+        if (this.props.loading) {
+            form = <Spinner />
+        };
+
+        let errorMessage = null;
+        if (this.props.error) {
+            errorMessage = (
+                <p>
+                    { this.props.error.message }
+                </p>
+            );
+        };
+
         return (
             <div className = { classes.Auth } >
+                { errorMessage }
                     <form onSubmit = { this.submitHandler } >
                         { form }
                         <Button btnType = "Success" >
                                 SUBMIT
                         </Button>
                     </form>
-                        <Button btnType = "Danger" >
+                        <Button btnType = "Danger"
+                                clicked = { this.switchAuthModeHandler } >
                                 SWITCH TO { this.state.isSignup ? 'SIGNIN' : 'SIGNUP'}
                         </Button>
             </div>
@@ -135,10 +151,17 @@ class Auth extends Component {
     }
 }
 
-const mapDispatchToProps = dispatch => {
+const mapStateToProps = state => {
     return {
-        onAuth: (email, password) => dispatch(actions.auth(email, password))
+        loading: state.auth.loading,
+        error: state.auth.error
     };
 };
 
-export default connect(null, mapDispatchToProps)(Auth);
+const mapDispatchToProps = dispatch => {
+    return {
+        onAuth: (email, password, isSignup) => dispatch(actions.auth(email, password, isSignup))
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Auth);

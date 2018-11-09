@@ -37,4 +37,48 @@
     wywolanie kolejnej akcji na podstawie zwroconych danych.
     W ciele zapytania obiekt zawierajacy dane rejestracyjne.
 10. Logowanie:
-    
+    isSignup - zmienna w local state okreslajaca czy jestesmy
+    na stronie rejestracji, jezeli tak to przycisk bedzie 
+    wyswietlal przejscie do strony logowania i odwrotnie.
+    switchAuthModeHandler - metoda zmieni wartosc isSignup
+    na przeciwna.
+    actions/auth.js:
+        Jezeli zmienne przyjda z isSignup mode = true, to 
+        rejestracja, jezeli false: logowanie.
+11. Przechowywanie tokenu:
+    actions/auth.js:
+        Z obiektu ktory wrocil z backend'u przekazujemy do 
+        reducera token i userId, wywolujemy odpowiednia akcje
+        przekazujac te dane dalej do reducera.
+    reducers/auth.js:
+        Autoryzacyjny reducer, zapisze token i userId w 
+        redux'owym globalnym state aplikacji po otrzymaniu
+        ich z actions.
+    index.js:
+        Nowy auth reducer dodany do combineReducers, aby byl
+        dostepny w innych miejscach w projekcie.
+12. Spinner podczas logowania / rejestracji:
+    Auth.js:
+        Jezeli loading z auth redux global state jest true,
+        to Spinner.
+    Error's:
+    actions/auth.js:
+        Po otrzymaniu bledu z obiektu bledu, blad jest
+        przekazywany do reducera.
+    Auth.js:
+        Jezeli w auth reducer jest zapisany blad, to 
+        wyswietlenie go.
+13. Wylogowanie:
+    Wykorzystanie czasu wygasniecia tokenu.
+    actions/auth.js:
+        Po poprawnym zalogowaniu sie, z obiektu z backend'u
+        mozna odczytac czas wygasniecia tokenu, ta informacja
+        zostanie przekazana do nowej akcji, ktora wykona 
+        kolejna akcje po okreslonym czasie ( czas wygasniecia
+        tokenu ).
+        logout
+    reducers/auth.js:
+        authLogout - usunie obecnie przechowywany token i 
+        userId w redux'owym globalnym state aplikacji.
+    Czyli po prostu nastapi wylogowanie.
+14. "Auth Guards":
