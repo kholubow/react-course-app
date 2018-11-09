@@ -81,4 +81,52 @@
         authLogout - usunie obecnie przechowywany token i 
         userId w redux'owym globalnym state aplikacji.
     Czyli po prostu nastapi wylogowanie.
-14. "Auth Guards":
+14. "Auth Req":
+    Wysylanie zapytan do backend'u z tokenem:
+    Token przechowywany jest w redux global state a potrzebny
+    jest w actions.
+    actions/order.js:
+        funkcja oczekuje tokenu z zewnatrz, ktory zostanie
+        uzyty podczas zapytania.
+    Token przekazany z Orders.js
+15. UI with token:
+    Po zalogowaniu sie, opcja wyloguj:
+    hoc/Layout.js:
+    Paski nawigacyjne, tutaj uzyskac dostep do redux global 
+    state, pobrac token i taka informacje wyslac do 
+    NavigationItem, zostanie to uzyte do zmieniania UI w 
+    zaleznosci, czy user jest zalogowany.
+    Wyslany do Toolbar.
+
+    NavigationItems otrzymuje informacje o tokenie (bool)
+    z obu zrodel: SideDrawer.js, Toolbar.js 
+
+    NavigationItems.js:
+    Wyswietlanie linku w zaleznosci od zalogowania sie.
+16. Dzialajacy Logout:
+    Auth/Logout:
+    Plik potrzebny do wywolania akcji do wylogowania.
+    Akcja wykona sie na starcie pracy komponentu.
+    Po wylogowaniu sie, przekierowanie na strone glowna:
+    Redirect
+    App.js:
+    Dodanie Logout.js do routingu.
+17. Poprawki UI:
+    Auth.js:
+    Redirect jezeli user jest zalogowany.
+    Po zalogowaniu sie, przekierowanie na strone glowna.
+
+
+    zamowienie burgera jezeli user jest zalogowany:
+    BurgerBuilder.js
+    Wykorzystanie tokenu zeby spr. czy jest zal.
+    ORDER NOW zachowanie zalezne od isAuth
+    BuildControls.js
+
+
+    BurgerBuilder.js:
+    Zal. - moze zamowic
+    nieZal - przekierowanie na strone rejestracji
+    purchaseHandler()
+18. Po rejestracji zeby nie stracic konfiguracji burgera:
+    
