@@ -129,4 +129,72 @@
     nieZal - przekierowanie na strone rejestracji
     purchaseHandler()
 18. Po rejestracji zeby nie stracic konfiguracji burgera:
+    Zmiana sciezki przekierowania wedlug tego, jaka sciezka
+    jest przechowywana w redux global state.
+    reducers/auth.js:
+    Zmiana sciezki przechowywanej w redux global state wedlug
+    tej, jaka trafi tutaj z actions.
+    actions/auth.js:
+    Akcja wywolywana z zewnatrz, przekazuje do reducera sciezke.
+    actions/index.js.
+    reducers/burgerBuilder.js:
+    Tryb budowania burgera ustawiony podczas dodawania / 
+    usuwania skladnikow.
+    BurgerBuilder.js:
+    Przekazujemy sciezke do zmienienia w redux global state.
+    Auth.js:
+    Przekierowanie uzytkownika na adres strony przechowywanej
+    w redux global state.
+
+
+    Jezeli zbudujemy burger, nast. dopiero sie zalogujemy,
+    to od razu zostaniemy przekierowani na strone zamowienia
+    z konf. burgera.
+
+19. Ponowne zaladowanie strony nie powoduje wylogowania uzytkownika
+    / utraty tokenu:
+
+    Wykorzystanie browser localStorage.
+    actions/auth.js:
+    Po zalogowaniu sie, dane tokenu oraz userId sa zapisywane
+    w localStorage przegladarki, natomiast data wygasniecia 
+    tokenu jest obliczana -> data dzisiejsza + data wygasniecia
+    tokenu w sec ( * 1000 ) = data wygasniecia tokenu, ktora zostaje
+    zapisana w localStorage przegladarki.
+
+
+    authCheckState() - funkcja sprawdzajaca, czy jest juz token,
+    jezeli nie ma to logout(), ale jezeli jest token, to po 
+    ponownym zaladowaniu strony trzeba ponownie zalogowac
+    uzytkownika:
+    Jezeli data wygasniecia tokenu > data teraz, to token jest
+    dalej aktualny i mozna go ponownie uzyc do zalogowania.
+
+
+    logout() - po wylogowaniu trzeba usunac informacje o tokenie,
+    userId, dacie wygasniecia tokenu z localStorage przegladarki.
+
+
+
+    App.js:
+    Laduje sie zawsze na starcie aplikacji, wiec dobre miejsce
+    na sprawdzenie, czy juz nie ma tokenu:
+    Wykorzystanie akcji: authCheckState.
+    Metoda componentDidMount() - wczytuje sie na starcie pracy
+    komponentu, pliku, wykona akcje na spr. czy ktos jest zal.
+
+20. Guarding Routes:
+    App.js:
+    Zeby sprawdzic, czy ktos jest zalogowany, sprawdzamy
+    token w redux global state.
+    Zmienna routes zawiera sciezki do ktorych ma dostep 
+    uzytkownik niezalogowany, ale jezeli jest token w 
+    redux global state, to zmienna routes bedzie zawierac
+    inny zestaw routow, dla usera zalogowanego.
+
+
+    W obu przypadkach, dla nieznanych sciezek dla aplikacji,
+    nastepuje przekierowanie na strone glowna.
+
+21. Uzywanie userId w zamowieniach:
     
