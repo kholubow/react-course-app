@@ -69,10 +69,6 @@ class OrderSummary extends Component {
     // show = true, jak bedziemy chcieli wyswietlic te menu
     // Klikniemy ORDER NOW i dopiero wtedy Modal i 
     // OrderSummary zostana wyrenderowane
-    componentWillUpdate() {
-        console.log('[OrderSummary] componentWillUpdate()');
-    }
-
     render() {
 
     const ingredientSummary = Object.keys(this.props.ingredients)

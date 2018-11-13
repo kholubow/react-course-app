@@ -197,4 +197,19 @@
     nastepuje przekierowanie na strone glowna.
 
 21. Uzywanie userId w zamowieniach:
-    
+    Zeby zalogowany user widzial tylko swoje zamowienia.
+    ContactData.js:
+    Pobranie userId z redux global state,
+    orderHandler():
+    spakowanie userId do obiektu ktory bedzie wyslany do 
+    akcji purchaseBurger z actions/order.js
+
+
+    Zamowienia zwracane dla zal. usera najlepiej zrobic
+    po stronie backend'u.
+
+    Na starcie pracy komponentu Orders.js przekazujemy
+    userId pobrany z redux global state do akcji.
+    fetchOrders z actions/order.js wysyla userId jako
+    queryParams do backend'u, ktory powinien zwrocic zamowienia
+    dotyczace tylko tego usera.
