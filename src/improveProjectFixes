@@ -1,2 +1,12 @@
 1. Lazy Loading Routes:
-    
+    Wczytywanie poszczegolnych podstron z aplikacji dopiero
+    w momencie, gdy zostana odwiedzone.
+
+    hoc/asyncComponent/asyncComponent.js
+
+
+    Uzycie tego pliku w:
+    App.js
+    asyncCheckout
+    asyncOrders
+    asyncAuth
