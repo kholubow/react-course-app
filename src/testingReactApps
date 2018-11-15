@@ -1,0 +1,66 @@
+Pakiety do testowania:
+
+    Jest - już zainstalowany.
+    enzyme - drugie narzędzie do Unit Testów.
+
+    npm install --save enzyme
+
+Do poprawnego przeprowadzania Unit Testów potrzebujemy
+koniecznie takze:
+
+    react-test-renderer
+    enzyme-adapter-react-16
+
+Plik do przeprowadzenia testu:
+
+    components/Navigation/NavigationItems/NavigationItems.test.js
+
+    Nazwa .test istotna, poniewaz modul testujacy automatycznie
+    bedzie " wylapywal " pliki z taka koncowka.
+
+    Podczas testow wybieramy komponent do testowania 
+    (NavigationItems) oraz co powinien posiadac 
+    (NavigationItem) x 2 bo nie jestemy zalogowani.
+    
+Uruchamianie napisanego testu:
+
+    npm test
+    Wykonaja sie wszystkie testy
+
+
+Drugi test:
+
+    NavigationItems powinien posiadac 3 x NavigationItem 
+    gdy user jest zalogowany.
+
+Metoda beforeEach() wykona sie przed kazdym testem ( it() )
+
+
+Pomocna do poznawania dostepnych funkcji testujacych jest
+dokumentacja Jest.
+
+Takze dokumentacja Enzyme.
+
+
+Sprawdzanie, czy konkretny NavigationItem Logout jest 
+w NavigationItems, gdy user jest zalogowany.
+
+Kazdy test ( it() ) uruchamia sie i testuje niezaleznie
+od pozostalych testow.
+
+
+
+
+
+
+
+Testowanie kontenerow:
+BurgerBuilder.js:
+Dodanie export:
+    export class BurgerBuilder extends Component
+Plik testujacy:
+    containers/BurgerBuilder/BurgerBuilder.test.js
+
+
+
+Testowanie Redux:
