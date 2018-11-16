@@ -1,0 +1,26 @@
+1. Check ( Adjust ) Basepath:
+    <BrowserRouter basename="/my-app/">
+2. Build and Optimize Project:
+    npm run build in create-react-app project
+3. Routing ustalony w aplikacji nie zadziala tak samo 
+po stronie zewnetrznego serwera, wiec:
+    Server must always serve index.html ( also for 404 cases )
+    To ensure that Routing works correctly.
+4. Do serwera nie musimy uploadowac calego projektu, nie
+potrzebujemy wrzucac plikow serwerowych z naszego projektu,
+musimy tylko zuploadowac SPA, bez plikow serwerowych:
+    In /build folder when using create-react-app
+
+
+
+W projekcie:
+    npm run build
+    Utworzony folder build
+    Jak najmniej kodu na serwer
+    Caly folder build wysylamy do serwera, nic wiecej.
+
+
+
+Static Files Host:
+    firebase
+    Hosting

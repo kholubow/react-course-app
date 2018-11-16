@@ -1,0 +1,38 @@
+Tworzenie workflow for our project with Webpack.
+Normalnie uzywa sie create-react-app do stworzenia srodowiska,
+w ktorym bedzie tworzony projekt, ale mozna takie srodowisko
+stworzyc i skonfigurowac recznie.
+
+
+1. Pusty folder (ewentualnie plik github'a):
+2. npm init
+3. W pojawiajacych sie oknach dialogowych:
+    ...
+    ...
+    Is this ok? yes
+4. pojawi sie plik package.json
+5. Instalowanie narzedzi:
+    npm install --save-dev webpack webpack-dev-server
+6. Files Structure:
+
+... = plik
+->  = folder
+
+
+-> node_modules
+-> src
+      -> assets
+      -> components
+      -> containers
+      -> hoc
+      ... App.js
+      ... index.css
+      ... index.html
+      ... index.js
+
+
+... git
+... package.json
+
+
+7. Stworzenie w src jakiegos prostego projektu.

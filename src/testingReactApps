@@ -64,3 +64,17 @@ Plik testujacy:
 
 
 Testowanie Redux:
+
+Testujemy funkcje reduxowe, ktore sa zwyklymi funkcjami,
+cos otrzymaja i cos zwracaja, testy maja polegac na 
+sprawdzaniu, czy na otrzymane dane zwracaja prawidlowe
+dane.
+store/reducers/auth.test.js
+Pierwszy test:
+przekazujemy undefined, czyli z switch.case powinien zostac
+wybrany initialState
+Drugi test:
+przekazujemy state poczatkowy oraz akcje i czy zostanie wybrana
+funkcja do zalogowania sie.
+W takim przypadku wynik testu powinien zawierac state z 
+przekazanym wczesniej tokenem i userId.
