@@ -36,3 +36,245 @@ stworzyc i skonfigurowac recznie.
 
 
 7. Stworzenie w src jakiegos prostego projektu.
+8. Creating the workflow for the project:
+9. Instalacja dalszych pakietow niezbednych do pracy
+srodowiska uruchomieniowego:
+    npm install --save react react-dom react-router-dom
+10. Deklaracja polecen:
+    package.json
+    scripts: {
+        "test": ... ,
+        "start": "webpack-dev-server",
+    }    
+
+    Dodanie nowego pliku do konfiguracji webpack-dev-server na tym
+    samym poziomie co package.json:
+    webpack.config.js:
+        pliki serwerowe automatycznie po wpisaniu npm start
+        beda szukac pliku o dokladnie takiej nazwie.
+    
+
+        webpack.config.js
+-----------------------------------------------------
+    const path = require('path');
+    const autoprefixer = require('autoprefixer');
+    const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+
+    module.exports = {
+        devtool: 'cheap-module-eval-source-map',
+        entry: './src/index.js',
+        output: {
+            path: path.resolve(__dirname, 'dist'),
+            filename: 'bundle.js',
+            chunkFilename: '[id].js',
+            publicPath: ''
+        },
+        resolve: {
+            extensions: ['.js', '.jsx']
+        },
+        module: {
+            rules: [
+                {
+                    test: /\.js$/,
+                    loader: 'babel-loader',
+                    exclude: /node_modules/
+                },
+                {
+                    test: /\.css$/,
+                    use: [
+                        {
+                            loader: 'style-loader'
+                        },
+                        {
+                            loader: 'css-loader',
+                            options: {
+                                importLoaders: 1,
+                                modules: true,
+                                localIdentName: '[name]__[local]__[hash:base64:5]'
+                            }
+                        },
+                        {
+                            loader: 'postcss-loader',
+                            options: {
+                                ident: 'postcss',
+                                plugins: () => [
+                                    autoprefixer({
+                                        browsers: [
+                                            "> 1%",
+                                            "last 2 versions"
+                                        ]
+                                    })
+                                ]
+                            }
+                        }
+                    ],
+                    exclude: /node_modules/
+                },
+                {
+                    test: /\.(png|jpe?g|gif)$/,
+                    loader: 'url-loader?limit=8000&name=images/[name].[ext]'
+                }
+            ]
+        },
+        plugins: [
+            new HtmlWebpackPlugin({
+                template: __dirname + '/src/index.html',
+                filename: 'index.html',
+                inject: 'body'
+            })
+        ]
+    };
+
+-----------------------------------------------------
+    npm install --save-dev babel-loader babel-core babel-preset-react babel-preset-env
+    Konfiguracja babel:
+
+    Nowy plik na tym samym poziomie co package.json:
+    Obsluga plikow js przez serwer.
+                .babelrc
+-----------------------------------------------------
+
+{
+    "presets": [
+        ["env", {
+            "targets": {
+                "browsers": [
+                    "> 1%",
+                    "last 2 versions"
+                ]
+            }
+        }],
+        "stage-2",
+        "react"
+    ],
+    "plugins": [
+        "syntax-dynamic-import"
+    ]
+}
+
+-----------------------------------------------------
+
+
+    Obsluga plikow css przez serwer:
+    npm install --save-dev css-loader style-loader
+    npm install --save-dev postcss-loader
+    npm install --save-dev autoprefixer
+
+
+
+    Obsluga obrazkow przez serwer:
+    npm install --save-dev url-loader
+    npm install --save-dev file-loader
+
+
+
+    Obsluga Lazy Loading:
+    npm install --save-dev babel-plugin-syntax-dynamic-import
+
+
+    Draft Features:
+    npm install --save-dev babel-preset-stage-2
+
+
+
+
+Tak stworzony serwer jeszcze nie obsluzy naszej aplikacji,
+trzeba go podpiac do pliku glownego index.html apki:
+
+    npm install --save-dev html-webpack-plugin
+
+
+
+
+Jezeli aplikacja bedzie wyslana na serwer, trzeba odpowiednio
+przygotowac webpack:
+Pliki projektowe musza zostac jak najlepiej zoptymalizowane.
+
+
+Za kazdym razem gdy bedzie uruchamiane polecenie build, bedzie 
+tworzony nowy folder z plikami projektowymi na serwer.
+npm install --save-dev rimraf
+
+
+package.json:
+"scripts": {
+    "build": "rimraf dist && webpack --config webpack.prod.config.js --progress --profile --color"
+}
+npm run build
+
+Nowy plik na tym samym poziomie co package.json:
+webpack.prod.config.js
+-----------------------------------------------
+    const path = require('path');
+    const autoprefixer = require('autoprefixer');
+    const HtmlWebpackPlugin = require('html-webpack-plugin');
+    const webpack = require('webpack');
+
+    module.exports = {
+        devtool: 'cheap-module-source-map',
+        entry: './src/index.js',
+        output: {
+            path: path.resolve(__dirname, 'dist'),
+            filename: 'bundle.js',
+            chunkFilename: '[id].js',
+            publicPath: ''
+        },
+        resolve: {
+            extensions: ['.js', '.jsx']
+        },
+        module: {
+            rules: [
+                {
+                    test: /\.js$/,
+                    loader: 'babel-loader',
+                    exclude: /node_modules/
+                },
+                {
+                    test: /\.css$/,
+                    use: [
+                        {
+                            loader: 'style-loader'
+                        },
+                        {
+                            loader: 'css-loader',
+                            options: {
+                                importLoaders: 1,
+                                modules: true,
+                                localIdentName: '[name]__[local]__[hash:base64:5]'
+                            }
+                        },
+                        {
+                            loader: 'postcss-loader',
+                            options: {
+                                ident: 'postcss',
+                                plugins: () => [
+                                    autoprefixer({
+                                        browsers: [
+                                            "> 1%",
+                                            "last 2 versions"
+                                        ]
+                                    })
+                                ]
+                            }
+                        }
+                    ],
+                    exclude: /node_modules/
+                },
+                {
+                    test: /\.(png|jpe?g|gif)$/,
+                    loader: 'url-loader?limit=8000&name=images/[name].[ext]'
+                }
+            ]
+        },
+        plugins: [
+            new HtmlWebpackPlugin({
+                template: __dirname + '/src/index.html',
+                filename: 'index.html',
+                inject: 'body'
+            }),
+            new webpack.optimize.UglifyJsPlugin()
+        ]
+    };
+
+-----------------------------------------------
