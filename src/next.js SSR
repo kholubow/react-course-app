@@ -1,0 +1,156 @@
+Server Side Rendering:
+next.js zastosowany od podstaw tworzenia środowiska 
+uruchomieniowego pozwala na renderowanie strony jeszcze
+po stronie serwera, zanim zostanie zwrocona dla usera,
+user otrzymuje gotowa strone.
+
+
+Pusty folder, sam plik github
+npm init
+enter enter yes
+npm install --save next react react-dom
+
+
+package.json:
+"scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
+}
+
+Next.js posiada wlasny, nowy routing, nie tworzymy 
+routingu jak przy normalnym React'ie.
+
+------------------------------------------------
+Foldery, uklad:
+->  = folder
+... = plik
+
+
+-> .next
+-> components
+    ... User.js
+-> node_modules
+-> pages
+        -> auth
+        ... user.js
+        ... index.js
+    ... index.js
+
+
+... .gitignore
+... package-lock.json
+... package.json
+
+------------------------------------------------
+
+nazwa_domeny/auth/user  -> do user.js 
+nazwa_domeny/auth       -> do index.js
+nazwa_domeny/           -> do pages/index.js
+
+Uruchomienie serwera:
+npm run dev
+
+Bez ustawiania zadnego routingu mozna poruszac sie po 
+komponentach.
+
+
+Tworzenie linkow, odnosnikow w apce:
+import Link from 'next/link';
+
+<Link href="/auth"><a>Auth</a></Link>
+
+
+
+2.przyklad:
+import Router from 'next/router';
+
+<button onClick={() => Router.push('/auth')}>Auth</button>
+
+
+
+
+
+
+Kod jest automatycznie podzielony, czyli dopiero jak 
+zostanie wybrana dana podstrona, to zostanie zaladowany
+ten kod, lazy loading.
+
+
+
+
+Dalej mozna pracowac jak w React'e, z ta roznica ze
+juz jest lazy loading i folder pages.
+
+
+
+Styling App in Next.js:
+W React'e uzywa sie CSS Module, 
+next.js posiada swoj wlasny sposob na uzywanie plikow CSS
+Piszemy kod css w jsx:
+<style jsx>{`
+    div {
+        border: 1px solid #eee;
+        box-shadow: 0 2p 3px #ccc;
+        padding: 20px;
+        text-align: center;
+    }
+`}</style>
+Mozna uzywac wszystkiego jak w plikach CSS.
+
+
+
+
+next.js posiada domyslna strone dla nieznanych routów,
+mozna samemu stworzyc error handling.
+
+-> pages
+    _error.js
+
+Tak samo tworzy sie jak zwykly React Component.
+
+A Special Lifecycle Hook in next.js:
+
+
+Metoda wykonuje sie po stronie serwera:
+static async getInitialProps(context) {
+    console.log(context);
+    return {appName: 'Super App'};
+}
+Mozna uzyc tej metody do pobrania danych z bazy danych i 
+do uzycia ich w render(). zanim jeszcze wszystko sie 
+zaladuje
+
+
+Lub tez:
+static getInitialProps(context) {
+    console.log(context);
+    const promise = new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve({appName: 'Super App'});
+        }, 1000);
+    });
+    return promise;
+}
+
+render() {
+    return (
+        {this.props.appName}
+    );
+}
+
+Strona sie zaladuje od razu ale elementy strony ktore musza
+zostac pobrane z bazy danych pojawia sie np. po jakims
+czasie na stronie bez przeladowywania calej strony.
+
+
+
+
+
+
+
+Deploy next.js app to the Web:
+npm run build
+next.js potrzebuje serwera, ktory potrafi obsluzyc node.js
+Trzeba przeslac wszystkie pliki z folderu glownego
+npm start <- po stronie hosta
